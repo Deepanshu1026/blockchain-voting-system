@@ -1,14 +1,19 @@
-import express from "express";
-import cors from "cors";
-import voterRoutes from "./routes/voter.routes.js";
+import dotenv from "dotenv";
+dotenv.config({ path: "../.env" });
 
-const app = express();
+(async () => {
+    const { default: express } = await import("express");
+    const { default: cors } = await import("cors");
+    const { default: voterRoutes } = await import("./routes/voter.routes.js");
 
-app.use(cors());
-app.use(express.json());
+    const app = express();
 
-app.use("/api/voter", voterRoutes);
+    app.use(cors());
+    app.use(express.json());
 
-app.listen(3001, () =>
-    console.log("Backend running on http://localhost:3001")
-);
+    app.use("/api/voter", voterRoutes);
+
+    app.listen(3001, () =>
+        console.log("Backend running on http://localhost:3001")
+    );
+})();

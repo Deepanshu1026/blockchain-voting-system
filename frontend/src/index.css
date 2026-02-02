@@ -1,0 +1,145 @@
+:root {
+    --primary: #4f46e5;
+    /* Professional Indigo */
+    --secondary: #6366f1;
+    --bg-color: #f8fafc;
+    /* Light grey/white background for trust */
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    /* Slate 800 */
+    --border-color: #e2e8f0;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.glass-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    /* Standard radius */
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Subtle shadow */
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+}
+
+/* Remove hover transform for stability */
+.glass-container:hover {
+    transform: none;
+}
+
+h1,
+h2,
+h3 {
+    color: #111827;
+    /* Near black */
+    background: none;
+    -webkit-text-fill-color: initial;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+button {
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    /* Standard rounded corners */
+    padding: 12px 24px;
+    color: white;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    box-shadow: none;
+    /* No shadow */
+}
+
+button:hover:not(:disabled) {
+    background-color: #4338ca;
+    /* Darker indigo */
+    transform: none;
+    box-shadow: none;
+}
+
+button:disabled {
+    background-color: #94a3b8;
+    cursor: not-allowed;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #ffffff;
+    color: var(--text-color);
+    outline: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+    /* Fix width issues */
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.upload-box {
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 3rem 1.5rem;
+    cursor: pointer;
+    background: #f9fafb;
+    /* Very light grey */
+    transition: border-color 0.2s, background-color 0.2s;
+    margin-bottom: 2rem;
+}
+
+.upload-box:hover {
+    border-color: var(--primary);
+    background: #f0fdf4;
+    /* Very subtle green hint on hover maybe, or just white */
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.success-message {
+    color: #059669;
+    /* Emerald 600 */
+    font-weight: 600;
+}
+
+.error-message {
+    color: #dc2626;
+    /* Red 600 */
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}

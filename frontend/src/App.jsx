@@ -19,9 +19,7 @@ function App() {
     };
 
     return (
-        <div style={{ fontFamily: "Arial, sans-serif", width: "600px", margin: "50px auto", textAlign: "center" }}>
-            <h2>Blockchain Voting System</h2>
-
+        <div>
             {step === 1 && (
                 <VerifyID onSuccess={handleVerificationSuccess} />
             )}

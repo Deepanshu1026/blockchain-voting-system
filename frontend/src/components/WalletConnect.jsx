@@ -20,7 +20,7 @@ export default function WalletConnect({ uniqueHash, idNumber, onSuccess }) {
             const res = await bindWallet({ uniqueHash, walletAddress: wallet, signature, idNumber });
 
             if (res.success) {
-                alert(res.message);
+                // alert(res.message);
                 onSuccess();
             } else {
                 alert("Error: " + (res.error || "Registration failed"));
@@ -33,11 +33,19 @@ export default function WalletConnect({ uniqueHash, idNumber, onSuccess }) {
     };
 
     return (
-        <div style={{ padding: "20px", border: "1px solid #ccc", marginTop: "20px" }}>
-            <h3>Step 2: Connect Wallet</h3>
-            <p>Identity Verified! Connect your wallet to register on blockchain.</p>
-            <button onClick={connect} disabled={loading}>
-                {loading ? "Registering..." : "Connect Wallet & Register"}
+        <div className="glass-container">
+            <h2>🔗 Connect Wallet</h2>
+            <p style={{ marginBottom: "30px" }}>
+                Identity Verified! <br />
+                <span style={{ color: "#4ade80" }}>{idNumber}</span>
+            </p>
+
+            <p style={{ opacity: 0.8, marginBottom: "20px" }}>
+                Connect your database-registered wallet to finalize registration on the blockchain.
+            </p>
+
+            <button onClick={connect} disabled={loading} style={{ width: "100%" }}>
+                {loading ? <span className="spinner"></span> : "Connect MetaMask & Register"}
             </button>
         </div>
     );
