@@ -1,15 +1,19 @@
-const API = "http://localhost:5000/api/voter";
+const API_URL = "http://localhost:3001/api/voter";
 
-export const verifyID = (idNumber) =>
-    fetch(`${API}/verify-id`, {
+export async function verifyID(idNumber) {
+    const res = await fetch(`${API_URL}/verify-id`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ idNumber })
-    }).then(res => res.json());
-
-export const bindWallet = (data) =>
-    fetch(`${API}/bind-wallet`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ idNumber }),
     });
+    return res.json();
+}
+
+export async function bindWallet(data) {
+    const res = await fetch(`${API_URL}/bind-wallet`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    return res.json();
+}

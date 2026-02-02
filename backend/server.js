@@ -9,6 +9,6 @@ app.use(express.json());
 
 app.use("/api/voter", voterRoutes);
 
-app.listen(5000, () =>
-    console.log("Backend running on http://localhost:5000")
+app.listen(3001, () =>
+    console.log("Backend running on http://localhost:3001")
 );
