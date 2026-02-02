@@ -1,0 +1,1 @@
+export const SECRET_SALT = "VERY_SECRET_SALT_123";
