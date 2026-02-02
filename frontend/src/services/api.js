@@ -16,4 +16,19 @@ export async function bindWallet(data) {
         body: JSON.stringify(data),
     });
     return res.json();
+    return res.json();
+}
+
+export async function getCandidates() {
+    const res = await fetch(`${API_URL.replace("/voter", "/admin")}/candidates`);
+    return res.json();
+}
+
+export async function addCandidate(data) {
+    const res = await fetch(`${API_URL.replace("/voter", "/admin")}/add-candidate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    return res.json();
 }

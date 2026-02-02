@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import VerifyID from "./components/VerifyID";
 import WalletConnect from "./components/WalletConnect";
 import VotingDashboard from "./components/VotingDashboard";
+import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
     const [step, setStep] = useState(1);
     const [uniqueHash, setUniqueHash] = useState("");
     const [idNumber, setIdNumber] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    useEffect(() => {
+        if (window.location.pathname === "/admin") {
+            setIsAdmin(true);
+        }
+    }, []);
 
     const handleVerificationSuccess = (hash, id) => {
         setUniqueHash(hash);
@@ -17,6 +25,10 @@ function App() {
     const handleRegistrationSuccess = () => {
         setStep(3);
     };
+
+    if (isAdmin) {
+        return <AdminDashboard />;
+    }
 
     return (
         <div>

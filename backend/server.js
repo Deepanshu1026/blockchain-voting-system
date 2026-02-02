@@ -5,6 +5,7 @@ dotenv.config({ path: "../.env" });
     const { default: express } = await import("express");
     const { default: cors } = await import("cors");
     const { default: voterRoutes } = await import("./routes/voter.routes.js");
+    const { default: adminRoutes } = await import("./routes/admin.routes.js");
 
     const app = express();
 
@@ -12,6 +13,7 @@ dotenv.config({ path: "../.env" });
     app.use(express.json());
 
     app.use("/api/voter", voterRoutes);
+    app.use("/api/admin", adminRoutes);
 
     app.listen(3001, () =>
         console.log("Backend running on http://localhost:3001")

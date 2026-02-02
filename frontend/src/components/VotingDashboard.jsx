@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ethers } from "ethers";
+import { getCandidates } from "../services/api";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
-// Simplified ABI for the Voting contract
 const ABI = [
     "function vote(uint candidateId) external",
     "function votes(uint candidateId) public view returns (uint)"
 ];
 
 export default function VotingDashboard() {
-    const [candidateId, setCandidateId] = useState("");
+    const [candidates, setCandidates] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        getCandidates().then(data => {
+            if (Array.isArray(data)) setCandidates(data);
+        });
+    }, []);
 
     const vote = async (id) => {
         setLoading(true);
@@ -31,14 +37,39 @@ export default function VotingDashboard() {
     };
 
     return (
-        <div style={{ padding: "20px", border: "1px solid #ccc", marginTop: "20px" }}>
-            <h3>Voting Dashboard</h3>
-            <p>Select a candidate to vote for:</p>
-            <div style={{ display: "flex", gap: "10px" }}>
-                <button disabled={loading} onClick={() => vote(1)}>Vote Candidate 1</button>
-                <button disabled={loading} onClick={() => vote(2)}>Vote Candidate 2</button>
-                <button disabled={loading} onClick={() => vote(3)}>Vote Candidate 3</button>
+        <div className="glass-container" style={{ maxWidth: "800px" }}>
+            <h2>🗳️ Vote for your Candidate</h2>
+            <p>Select a candidate below to cast your secure blockchain vote.</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginTop: "30px" }}>
+                {candidates.map(candidate => (
+                    <div key={candidate.id} style={{
+                        background: "#fff",
+                        padding: "20px",
+                        borderRadius: "12px",
+                        border: "1px solid var(--border-color)",
+                        textAlign: "center"
+                    }}>
+                        <img
+                            src={candidate.image_url || `https://api.dicebear.com/7.x/initials/svg?seed=${candidate.name}`}
+                            alt={candidate.name}
+                            style={{ width: "80px", height: "80px", borderRadius: "50%", marginBottom: "15px" }}
+                        />
+                        <h3 style={{ margin: "0 0 5px 0" }}>{candidate.name}</h3>
+                        <p style={{ color: "var(--primary)", fontWeight: "bold", margin: "0 0 15px 0" }}>{candidate.party}</p>
+
+                        <button
+                            onClick={() => vote(candidate.id)}
+                            disabled={loading}
+                            style={{ padding: "8px 16px", fontSize: "0.9rem" }}
+                        >
+                            {loading ? "Voting..." : "Vote"}
+                        </button>
+                    </div>
+                ))}
             </div>
+
+            {candidates.length === 0 && <p>Loading candidates...</p>}
         </div>
     );
 }
