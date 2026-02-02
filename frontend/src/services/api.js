@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3001/api/voter";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api/voter";
 
 export async function verifyID(idNumber) {
     const res = await fetch(`${API_URL}/verify-id`, {
