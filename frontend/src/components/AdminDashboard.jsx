@@ -1,80 +1,92 @@
 import { useState, useEffect } from "react";
-import { addCandidate, getCandidates } from "../services/api";
+import { getPolls, createPoll, addCandidateToPoll } from "../services/api";
 
 export default function AdminDashboard() {
-    const [candidates, setCandidates] = useState([]);
-    const [form, setForm] = useState({ name: "", party: "", image_url: "" });
-    const [loading, setLoading] = useState(false);
+    const [polls, setPolls] = useState([]);
+    const [newPollTitle, setNewPollTitle] = useState("");
+    const [selectedPoll, setSelectedPoll] = useState(null);
+
+    // Candidate Form
+    const [name, setName] = useState("");
+    const [party, setParty] = useState("");
+    const [image, setImage] = useState("");
 
     useEffect(() => {
-        loadCandidates();
+        loadPolls();
     }, []);
 
-    const loadCandidates = async () => {
-        const data = await getCandidates();
-        if (Array.isArray(data)) setCandidates(data);
+    const loadPolls = async () => {
+        const data = await getPolls();
+        setPolls(data);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        const res = await addCandidate(form);
-        if (res.success) {
-            alert("Candidate Added!");
-            setForm({ name: "", party: "", image_url: "" });
-            loadCandidates();
-        } else {
-            alert("Error: " + res.error);
-        }
-        setLoading(false);
+    const handleCreatePoll = async () => {
+        if (!newPollTitle) return;
+        await createPoll({ title: newPollTitle, description: "Created by Admin" });
+        setNewPollTitle("");
+        loadPolls();
+    };
+
+    const handleAddCandidate = async () => {
+        if (!selectedPoll || !name || !party) return;
+        await addCandidateToPoll({
+            pollId: selectedPoll,
+            name,
+            party,
+            imageUrl: image || `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`
+        });
+        alert("Candidate Added!");
+        setName("");
+        setParty("");
+        setImage("");
+        loadPolls(); // Reload to see updated counts
     };
 
     return (
-        <div className="glass-container" style={{ maxWidth: "800px" }}>
-            <h2>🗳️ Admin Dashboard</h2>
+        <div style={{ padding: "20px" }}>
+            <h1>🛡️ Admin Dashboard</h1>
 
-            <form onSubmit={handleSubmit} style={{ textAlign: "left", marginBottom: "40px" }}>
-                <h3>Add Candidate</h3>
-                <div style={{ marginBottom: "15px" }}>
-                    <label>Name</label>
+            {/* Create Poll Section */}
+            <div className="glass-container" style={{ marginBottom: "20px" }}>
+                <h2>Create New Election</h2>
+                <div style={{ display: "flex", gap: "10px" }}>
                     <input
-                        type="text"
-                        value={form.name}
-                        onChange={e => setForm({ ...form, name: e.target.value })}
-                        required
+                        value={newPollTitle}
+                        onChange={(e) => setNewPollTitle(e.target.value)}
+                        placeholder="Election Title (e.g. 2026 President)"
+                        style={{ flex: 1, padding: "10px" }}
                     />
+                    <button onClick={handleCreatePoll}>Create</button>
                 </div>
-                <div style={{ marginBottom: "15px" }}>
-                    <label>Party</label>
-                    <input
-                        type="text"
-                        value={form.party}
-                        onChange={e => setForm({ ...form, party: e.target.value })}
-                        required
-                    />
-                </div>
-                <div style={{ marginBottom: "15px" }}>
-                    <label>Image URL (Optional)</label>
-                    <input
-                        type="text"
-                        value={form.image_url}
-                        onChange={e => setForm({ ...form, image_url: e.target.value })}
-                        placeholder="https://..."
-                    />
-                </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? "Adding..." : "Add Candidate"}
-                </button>
-            </form>
+            </div>
 
-            <h3>Current Candidates</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "20px" }}>
-                {candidates.map(c => (
-                    <div key={c.id} style={{ background: "rgba(255,255,255,0.05)", padding: "15px", borderRadius: "10px", border: "1px solid var(--border-color)" }}>
-                        {c.image_url && <img src={c.image_url} alt={c.name} style={{ width: "60px", height: "60px", borderRadius: "50%", marginBottom: "10px" }} />}
-                        <h4>{c.name}</h4>
-                        <p style={{ opacity: 0.7 }}>{c.party}</p>
-                        <small>ID: {c.id}</small>
+            {/* Add Candidate Section */}
+            <div className="glass-container">
+                <h2>Add Candidate</h2>
+                <select
+                    value={selectedPoll || ""}
+                    onChange={(e) => setSelectedPoll(e.target.value)}
+                    style={{ width: "100%", marginBottom: "10px", padding: "10px", background: "#333", color: "white", border: "1px solid #555" }}
+                >
+                    <option value="">Select Election...</option>
+                    {polls.map(p => (
+                        <option key={p.id} value={p.id}>{p.title}</option>
+                    ))}
+                </select>
+
+                <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={{ display: "block", width: "100%", marginBottom: "10px", padding: "10px" }} />
+                <input placeholder="Party" value={party} onChange={(e) => setParty(e.target.value)} style={{ display: "block", width: "100%", marginBottom: "10px", padding: "10px" }} />
+                <input placeholder="Image URL (Optional)" value={image} onChange={(e) => setImage(e.target.value)} style={{ display: "block", width: "100%", marginBottom: "10px", padding: "10px" }} />
+
+                <button onClick={handleAddCandidate} disabled={!selectedPoll} style={{ width: "100%" }}>Add Candidate</button>
+            </div>
+
+            <div style={{ marginTop: "20px" }}>
+                <h3>Existing Elections</h3>
+                {polls.map(p => (
+                    <div key={p.id} style={{ border: "1px solid #444", padding: "15px", marginBottom: "15px", borderRadius: "8px", background: "rgba(255,255,255,0.05)" }}>
+                        <strong style={{ fontSize: "1.2rem" }}>{p.title}</strong>
+                        <p style={{ margin: "5px 0", opacity: 0.7 }}>Candidates: {p.candidates ? p.candidates.length : 0}</p>
                     </div>
                 ))}
             </div>
