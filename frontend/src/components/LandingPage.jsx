@@ -45,9 +45,14 @@ export default function LandingPage() {
                     <p style={{ opacity: 0.7, marginBottom: "1.5rem", flexGrow: 1 }}>
                         Already registered? Cast your vote securely on the blockchain.
                     </p>
-                    <Link to="/vote" style={{ width: "100%" }}>
-                        <button style={{ width: "100%", background: "var(--secondary-color, #646cff)" }}>Go to Voting</button>
-                    </Link>
+                    <div style={{ display: "flex", gap: "10px", width: "100%" }}>
+                        <Link to="/login" style={{ flex: 1 }}>
+                            <button style={{ width: "100%", background: "var(--secondary-color, #646cff)" }}>Login</button>
+                        </Link>
+                        <Link to="/vote" style={{ flex: 1 }}>
+                            <button style={{ width: "100%", background: "transparent", border: "1px solid var(--secondary-color, #646cff)" }}>Quick Vote</button>
+                        </Link>
+                    </div>
                 </div>
 
             </div>

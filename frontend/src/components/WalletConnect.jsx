@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { bindWallet } from "../services/api";
 
-export default function WalletConnect({ uniqueHash, idNumber, onSuccess }) {
+export default function WalletConnect({ uniqueHash, idNumber, password, onSuccess }) {
     const [loading, setLoading] = useState(false);
 
     const connect = async () => {
@@ -17,7 +17,7 @@ export default function WalletConnect({ uniqueHash, idNumber, onSuccess }) {
             const message = `Bind wallet for voter ${uniqueHash}`;
             const signature = await signer.signMessage(message);
 
-            const res = await bindWallet({ uniqueHash, walletAddress: wallet, signature, idNumber });
+            const res = await bindWallet({ uniqueHash, walletAddress: wallet, signature, idNumber, password });
 
             if (res.success) {
                 // alert(res.message);

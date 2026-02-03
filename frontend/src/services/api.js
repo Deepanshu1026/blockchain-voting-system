@@ -16,6 +16,14 @@ export async function bindWallet(data) {
         body: JSON.stringify(data),
     });
     return res.json();
+}
+
+export async function login(idNumber, password) {
+    const res = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idNumber, password }),
+    });
     return res.json();
 }
 
