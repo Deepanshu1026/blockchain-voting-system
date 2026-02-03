@@ -14,7 +14,7 @@ export default function VerifyID({ onSuccess }) {
         try {
             const data = await verifyID(idNumber);
             if (data.success) {
-                onSuccess(data.uniqueHash, idNumber);
+                onSuccess(data.uniqueHash, idNumber, data.isRegistered, data.user);
             } else {
                 setError(data.message || "Verification failed");
             }

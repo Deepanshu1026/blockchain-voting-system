@@ -1,20 +1,32 @@
 import { useState } from "react";
 import VerifyID from "./VerifyID";
 import WalletConnect from "./WalletConnect";
+import VoterProfile from "./VoterProfile";
 import { Link } from "react-router-dom";
 
 export default function VerificationFlow() {
     const [step, setStep] = useState(1);
     const [uniqueHash, setUniqueHash] = useState("");
     const [idNumber, setIdNumber] = useState("");
+    const [userData, setUserData] = useState(null);
 
-    const handleVerificationSuccess = (hash, id) => {
+    const handleVerificationSuccess = (hash, id, isRegistered, user) => {
         setUniqueHash(hash);
         setIdNumber(id);
-        setStep(2);
+        if (isRegistered && user) {
+            setUserData(user);
+            setStep(3); // Go straight to Profile
+        } else {
+            setStep(2); // Go to Wallet Connect
+        }
     };
 
     const handleRegistrationSuccess = () => {
+        // After registration, show profile with current data
+        setUserData({
+            id_number: idNumber,
+            // Wallet address would be nice here, but for now just showing connected status
+        });
         setStep(3);
     };
 
@@ -39,19 +51,7 @@ export default function VerificationFlow() {
             )}
 
             {step === 3 && (
-                <div className="glass-container" style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🎉</div>
-                    <h2>Registration Complete!</h2>
-                    <p style={{ marginBottom: "2rem" }}>
-                        Your identity has been verified and your wallet is now registered.
-                        You can now proceed to vote.
-                    </p>
-                    <Link to="/vote">
-                        <button style={{ width: "100%", background: "var(--secondary-color, #646cff)" }}>
-                            Go to Voting Portal
-                        </button>
-                    </Link>
-                </div>
+                <VoterProfile user={userData} />
             )}
         </div>
     );

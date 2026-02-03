@@ -20,7 +20,16 @@ export async function verifyID(req, res) {
     }
 
     if (user.is_registered) {
-        return res.json({ success: false, message: "ID already registered for voting." });
+        return res.json({
+            success: true,
+            isRegistered: true,
+            user: {
+                id_number: user.id_number,
+                wallet_address: user.wallet_address,
+                name: user.name // Assuming 'name' column exists, otherwise remove
+            },
+            message: "Welcome back! You are already registered."
+        });
     }
 
     // Generate hash
