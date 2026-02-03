@@ -48,7 +48,7 @@ export async function createPoll(req, res) {
         return res.status(500).json({ error: error.message });
     }
 
-    res.json({ success: true, poll: data });
+    res.json({ success: true, poll });
 }
 
 // Add Candidate to Poll

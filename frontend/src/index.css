@@ -18,27 +18,35 @@ body {
     min-height: 100vh;
 }
 
+/* Layout & Sidebar */
 .layout-container {
     display: flex;
     min-height: 100vh;
+    width: 100vw;
 }
 
 .main-content {
     flex: 1;
-    margin-left: 250px;
-    /* Sidebar width */
-    padding: 40px;
+    margin-left: 280px;
+    /* Width of sidebar (250px) + gap */
+    padding: 40px 60px;
+    /* Top/Bottom 40px, Left/Right 60px */
     position: relative;
     box-sizing: border-box;
+    max-width: calc(100vw - 280px);
+    /* prevent overflow */
 }
 
+/* Glass Cards */
 .glass-container {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 2rem;
+    border-radius: 16px;
+    padding: 2.5rem;
     width: 100%;
-    /* No shadows, flat design */
+    margin-bottom: 2rem;
+    box-sizing: border-box;
+    /* Clean, flat design */
 }
 
 button {
