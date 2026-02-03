@@ -1,38 +1,38 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import VerifyID from "./VerifyID";
 import WalletConnect from "./WalletConnect";
-import VoterProfile from "./VoterProfile";
-import { Link } from "react-router-dom";
+import { verifyID } from "../services/api";
 
 export default function VerificationFlow() {
     const [step, setStep] = useState(1);
-    const [uniqueHash, setUniqueHash] = useState("");
-    const [idNumber, setIdNumber] = useState("");
-    const [userData, setUserData] = useState(null);
-
+    const [idDetails, setIdDetails] = useState({ idNumber: "", uniqueHash: "" });
     const [password, setPassword] = useState("");
 
-    const handleVerificationSuccess = (hash, id, isRegistered, user) => {
-        setUniqueHash(hash);
-        setIdNumber(id);
-        if (isRegistered && user) {
-            setUserData(user);
-            setStep(4); // Go straight to Profile (Step 4 now)
+    const navigate = useNavigate();
+
+    // Step 1: Called when ID is verified
+    const handleVerificationSuccess = async (hash, idNumber, isRegistered) => {
+        setIdDetails({ idNumber, uniqueHash: hash });
+
+        if (isRegistered) {
+            alert("This ID is already registered. Please Login.");
+            navigate("/login");
         } else {
-            setStep(2); // Go to Password Creation
+            setStep(2); // Proceed to Password
         }
     };
 
+    // Step 2: Called when Password is set
     const handlePasswordSet = (pwd) => {
         setPassword(pwd);
-        setStep(3); // Go to Wallet Connect
+        setStep(3); // Proceed to Wallet Binding
     };
 
+    // Step 3: Called when Wallet is bound successfully
     const handleRegistrationSuccess = () => {
-        setUserData({
-            id_number: idNumber,
-        });
-        setStep(4);
+        alert("Registration Successful! Please Login to continue.");
+        navigate("/login");
     };
 
     return (
@@ -73,15 +73,11 @@ export default function VerificationFlow() {
 
             {step === 3 && (
                 <WalletConnect
-                    uniqueHash={uniqueHash}
-                    idNumber={idNumber}
+                    uniqueHash={idDetails.uniqueHash}
+                    idNumber={idDetails.idNumber}
                     password={password}
                     onSuccess={handleRegistrationSuccess}
                 />
-            )}
-
-            {step === 4 && (
-                <VoterProfile user={userData} />
             )}
         </div>
     );

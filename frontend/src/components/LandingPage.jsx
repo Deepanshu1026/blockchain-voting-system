@@ -2,59 +2,123 @@ import { Link } from "react-router-dom";
 
 export default function LandingPage() {
     return (
-        <div className="glass-container" style={{ textAlign: "center", maxWidth: "800px" }}>
-            <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>Blockchain Voting System</h1>
-            <p style={{ fontSize: "1.1rem", opacity: 0.8, marginBottom: "3rem" }}>
-                Secure, Transparent, and Decentralized Elections
-            </p>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+            maxWidth: "1200px",
+            margin: "0 auto",
+            padding: "0 20px"
+        }}>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2rem" }}>
+            {/* Navbar */}
+            <nav style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "20px 0"
+            }}>
+                <div style={{ fontSize: "1.5rem", fontWeight: "900", letterSpacing: "1px" }}>BLOCKVOTE</div>
+                <div style={{ display: "flex", gap: "30px", fontSize: "0.9rem", color: "#ccc" }}>
+                    <span>About</span>
+                    <span>Technology</span>
+                    <span>Security</span>
+                    <span>Contact</span>
+                </div>
+                <Link to="/admin-login">
+                    <button style={{
+                        background: "#000",
+                        border: "1px solid #333",
+                        borderRadius: "20px",
+                        padding: "10px 20px"
+                    }}>
+                        Admin Login
+                    </button>
+                </Link>
+            </nav>
 
-                {/* Verification Portal Card */}
-                <div style={{
-                    background: "rgba(255, 255, 255, 0.05)",
-                    padding: "2rem",
-                    borderRadius: "16px",
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center"
-                }}>
-                    <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔐</div>
-                    <h3 style={{ marginBottom: "1rem" }}>Voter Verification</h3>
-                    <p style={{ opacity: 0.7, marginBottom: "1.5rem", flexGrow: 1 }}>
-                        New here? Verify your identity and register your wallet to participate.
+            {/* Hero Section */}
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flex: 1,
+                paddingBottom: "50px",
+                flexWrap: "wrap",
+                gap: "40px"
+            }}>
+
+                {/* Left Text */}
+                <div style={{ flex: "1", minWidth: "300px" }}>
+                    <h1 style={{
+                        fontSize: "4.5rem",
+                        lineHeight: "1.1",
+                        marginBottom: "20px",
+                        background: "linear-gradient(to right, #fff, #ccc)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent"
+                    }}>
+                        The Future of <br />
+                        <span style={{ color: "#fff", WebkitTextFillColor: "white" }}>Secure Voting</span>
+                    </h1>
+                    <p style={{ fontSize: "1.1rem", color: "#ccc", maxWidth: "450px", lineHeight: "1.6", marginBottom: "40px" }}>
+                        Embrace the power of decentralized democracy. Built on Ethereum for transparent, tamper-proof, and verifiable elections.
                     </p>
-                    <Link to="/verify" style={{ width: "100%" }}>
-                        <button style={{ width: "100%" }}>Go to Verification</button>
-                    </Link>
                 </div>
 
-                {/* Voting Portal Card */}
+                {/* Right Card */}
                 <div style={{
-                    background: "rgba(255, 255, 255, 0.05)",
-                    padding: "2rem",
-                    borderRadius: "16px",
+                    flex: "0 0 400px",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    backdropFilter: "blur(20px)",
                     border: "1px solid rgba(255, 255, 255, 0.1)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center"
+                    borderRadius: "24px",
+                    padding: "30px",
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
                 }}>
-                    <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🗳️</div>
-                    <h3 style={{ marginBottom: "1rem" }}>Voting Portal</h3>
-                    <p style={{ opacity: 0.7, marginBottom: "1.5rem", flexGrow: 1 }}>
-                        Already registered? Cast your vote securely on the blockchain.
-                    </p>
-                    <div style={{ display: "flex", gap: "10px", width: "100%" }}>
-                        <Link to="/login" style={{ flex: 1 }}>
-                            <button style={{ width: "100%", background: "var(--secondary-color, #646cff)" }}>Login</button>
-                        </Link>
-                        <Link to="/vote" style={{ flex: 1 }}>
-                            <button style={{ width: "100%", background: "transparent", border: "1px solid var(--secondary-color, #646cff)" }}>Quick Vote</button>
+                    <h2 style={{ fontSize: "1.5rem", marginBottom: "20px" }}>Get Started</h2>
+
+                    <div style={{ marginBottom: "20px" }}>
+                        <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "8px" }}>New User?</label>
+                        <Link to="/verify">
+                            <button style={{
+                                width: "100%",
+                                background: "rgba(255,255,255,0.1)",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                                padding: "15px",
+                                borderRadius: "12px",
+                                textAlign: "left",
+                                color: "white",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center"
+                            }}>
+                                <span>Register / Verify ID</span>
+                                <span>→</span>
+                            </button>
                         </Link>
                     </div>
-                </div>
 
+                    <div style={{ marginBottom: "30px" }}>
+                        <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "8px" }}>Already Registered?</label>
+                        <Link to="/login">
+                            <button style={{
+                                width: "100%",
+                                background: "white",
+                                color: "black",
+                                padding: "15px",
+                                borderRadius: "12px",
+                                fontWeight: "bold"
+                            }}>
+                                Login to Vote
+                            </button>
+                        </Link>
+                    </div>
+
+                    <p style={{ fontSize: "0.8rem", color: "#666", textAlign: "center" }}>
+                        Secured by Blockchain Technology
+                    </p>
+                </div>
             </div>
         </div>
     );

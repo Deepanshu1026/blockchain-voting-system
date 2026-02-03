@@ -6,8 +6,13 @@ import { votingContractAddress, votingContractABI } from "../config/contracts";
 export default function VotingDashboard() {
     const [polls, setPolls] = useState([]);
     const [loading, setLoading] = useState({}); // loading state per poll
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const user = localStorage.getItem("user");
+        if (!user) {
+            navigate("/login");
+        }
         loadPolls();
     }, []);
 

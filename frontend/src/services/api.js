@@ -40,3 +40,26 @@ export async function addCandidate(data) {
     });
     return res.json();
 }
+// Polls API
+export async function getPolls() {
+    const res = await fetch(`${API_URL.replace("/voter", "/polls")}/polls`);
+    return res.json();
+}
+
+export async function createPoll(data) {
+    const res = await fetch(`${API_URL.replace("/voter", "/polls")}/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    return res.json();
+}
+
+export async function addCandidateToPoll(data) {
+    const res = await fetch(`${API_URL.replace("/voter", "/polls")}/add-candidate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    return res.json();
+}

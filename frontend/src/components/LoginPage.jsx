@@ -17,10 +17,11 @@ export default function LoginPage() {
         try {
             const res = await login(idNumber, password);
             if (res.success) {
-                // Navigate to profile with user data
-                navigate("/verify", { state: { user: res.user } });
+                // Store in local storage or context if needed
+                localStorage.setItem("user", JSON.stringify(res.user));
+                navigate("/vote"); // Direct to Voting Dashboard
             } else {
-                setError(res.message || "Login failed");
+                setError(res.message || "Invalid credentials");
             }
         } catch (err) {
             setError("Server error");
