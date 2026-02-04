@@ -16,6 +16,9 @@ body {
     background: var(--bg-color);
     color: var(--text-primary);
     min-height: 100vh;
+    scrollbar-gutter: stable;
+    width: 100vw;
+    overflow-x: hidden;
 }
 
 /* Layout & Sidebar */
