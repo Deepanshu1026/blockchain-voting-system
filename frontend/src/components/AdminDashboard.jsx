@@ -73,7 +73,7 @@ export default function AdminDashboard() {
         <div style={{ display: "flex", minHeight: "100vh", background: "#121212", color: "white" }}>
             <Sidebar />
 
-            <div style={{ marginLeft: "270px", width: "100%", padding: "40px" }}>
+            <div style={{ marginLeft: "260px", flex: 1, padding: "40px" }}>
                 <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
 
                     {/* Header */}

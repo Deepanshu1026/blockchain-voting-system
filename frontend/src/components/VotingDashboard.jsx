@@ -163,7 +163,7 @@ export default function VotingDashboard() {
             <Sidebar />
 
             {/* Main Content Wrapper */}
-            <div style={{ marginLeft: "260px", width: "100%", transition: "all 0.3s ease" }}>
+            <div style={{ marginLeft: "260px", flex: 1, transition: "all 0.3s ease" }}>
 
                 {/* Fixed Header */}
                 <div style={{
