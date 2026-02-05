@@ -167,28 +167,28 @@ export default function VotingDashboard() {
 
                 {/* Fixed Header */}
                 <div style={{
-                    height: "70px",
-                    background: "rgba(18, 18, 18, 0.8)",
-                    backdropFilter: "blur(20px)",
-                    borderBottom: `1px solid ${theme.border}`,
+                    height: "64px",
+                    background: "#18191a",
+                    borderBottom: "1px solid #333",
                     display: "flex",
                     alignItems: "center",
-                    padding: "0 40px",
+                    padding: "0 24px",
                     position: "sticky",
                     top: 0,
-                    zIndex: 90,
+                    zIndex: 999,
                     justifyContent: "space-between"
                 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-                        <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: "700", letterSpacing: "-0.5px" }}>Voting Dashboard</h2>
+                        <h2 style={{ margin: 0, fontSize: "1.25rem", fontWeight: "700", color: "#fff" }}>Voting Dashboard</h2>
 
                         {/* Tab Switcher for Content */}
-                        <div style={{ display: "flex", background: "rgba(255,255,255,0.05)", borderRadius: "10px", padding: "4px" }}>
+                        <div style={{ display: "flex", background: "#242526", borderRadius: "8px", padding: "4px" }}>
                             <button
                                 onClick={() => setActiveTab('overview')}
                                 style={{
-                                    background: activeTab === 'overview' ? theme.accent : 'transparent',
-                                    border: "none", color: "white", padding: "8px 20px", borderRadius: "8px", fontSize: "0.9rem", fontWeight: "600",
+                                    background: activeTab === 'overview' ? "#3a3b3c" : "transparent",
+                                    color: activeTab === 'overview' ? "#e4e6eb" : "#b0b3b8",
+                                    border: "none", padding: "6px 16px", borderRadius: "6px", fontSize: "0.85rem", fontWeight: "600",
                                     cursor: "pointer", transition: "all 0.2s"
                                 }}
                             >
@@ -197,8 +197,9 @@ export default function VotingDashboard() {
                             <button
                                 onClick={() => setActiveTab('vote')}
                                 style={{
-                                    background: activeTab === 'vote' ? theme.accent : 'transparent',
-                                    border: "none", color: "white", padding: "8px 20px", borderRadius: "8px", fontSize: "0.9rem", fontWeight: "600",
+                                    background: activeTab === 'vote' ? "#3a3b3c" : "transparent",
+                                    color: activeTab === 'vote' ? "#e4e6eb" : "#b0b3b8",
+                                    border: "none", padding: "6px 16px", borderRadius: "6px", fontSize: "0.85rem", fontWeight: "600",
                                     cursor: "pointer", transition: "all 0.2s"
                                 }}
                             >
