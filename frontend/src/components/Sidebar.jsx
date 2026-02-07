@@ -1,8 +1,27 @@
-import { Link, useLocation } from "react-router-dom";
-import { FaHome, FaVoteYea, FaUserCheck, FaUserShield, FaTwitter } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaHome, FaVoteYea, FaUserCheck, FaUserShield, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 export default function Sidebar({ role = "user" }) {
     const location = useLocation();
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (e) {
+                console.error("Error parsing user from local storage", e);
+            }
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        navigate("/login");
+    };
 
     const userMenuItems = [
         { name: "Home", path: "/", icon: <FaHome size={24} /> },
@@ -67,7 +86,9 @@ export default function Sidebar({ role = "user" }) {
                     );
                 })}
 
-                {/* Admin Link for users (at bottom usually, but here within nav for visibility) */}
+                {/* Admin Link for users - Only show if NOT logged in as admin already? Or always show? 
+                    If user is logged in as 'user', show Admin Access link to login as admin.
+                */}
                 {role === "user" && (
                     <Link
                         to="/admin-login"
@@ -89,28 +110,66 @@ export default function Sidebar({ role = "user" }) {
                 )}
             </nav>
 
-            {/* Profile Section (Mock) */}
-            <div style={{
-                marginTop: "auto",
-                padding: "12px",
-                display: "flex",
-                alignItems: "center",
-                background: "transparent",
-                borderRadius: "50px",
-                cursor: "pointer"
-            }}>
-                <div style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "#333",
-                    marginRight: "12px"
-                }}></div>
-                <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: "0.95rem", fontWeight: "bold", color: "#fff" }}>User</div>
-                    <div style={{ fontSize: "0.85rem", color: "#71767b" }}>@voter</div>
+            {/* Profile / Logout Section */}
+            {user ? (
+                <div
+                    onClick={handleLogout}
+                    title="Click to Logout"
+                    style={{
+                        marginTop: "auto",
+                        padding: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                        background: "rgba(29, 155, 240, 0.1)",
+                        borderRadius: "50px",
+                        cursor: "pointer",
+                        transition: "background 0.2s"
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.background = "rgba(255, 0, 0, 0.2)"}
+                    onMouseOut={(e) => e.currentTarget.style.background = "rgba(29, 155, 240, 0.1)"}
+                >
+                    <div style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        background: "#333",
+                        marginRight: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}>
+                        <FaUser size={20} color="#fff" />
+                    </div>
+                    <div style={{ flex: 1, overflow: "hidden" }}>
+                        <div style={{ fontSize: "0.95rem", fontWeight: "bold", color: "#fff", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {user.name || user.idNumber || "User"}
+                        </div>
+                        <div style={{ fontSize: "0.85rem", color: "#666", display: "flex", alignItems: "center", gap: "5px" }}>
+                            <FaSignOutAlt size={12} /> Log out @{user.role || "voter"}
+                        </div>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div style={{ marginTop: "auto", padding: "20px" }}>
+                    <Link to="/login" style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "15px 0",
+                        textAlign: "center",
+                        background: "#1d9bf0",
+                        color: "white",
+                        borderRadius: "30px",
+                        fontWeight: "bold",
+                        textDecoration: "none",
+                        fontSize: "1.1rem"
+                    }}>
+                        Login
+                    </Link>
+                    <p style={{ textAlign: "center", fontSize: "0.8rem", color: "#666", marginTop: "10px" }}>
+                        Don't have an ID? <Link to="/verify" style={{ color: "#1d9bf0" }}>Verify</Link>
+                    </p>
+                </div>
+            )}
         </div>
     );
 }

@@ -1,6 +1,18 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function LandingPage() {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (e) { console.error(e); }
+        }
+    }, []);
+
     return (
         <div style={{
             display: "flex",
@@ -25,16 +37,19 @@ export default function LandingPage() {
                     <span>Security</span>
                     <span>Contact</span>
                 </div>
-                <Link to="/admin-login">
-                    <button style={{
-                        background: "#000",
-                        border: "1px solid #333",
-                        borderRadius: "20px",
-                        padding: "10px 20px"
-                    }}>
-                        Admin Login
-                    </button>
-                </Link>
+                {/* Only show Admin Login if not logged in as admin */}
+                {user?.role !== 'admin' && (
+                    <Link to="/admin-login">
+                        <button style={{
+                            background: "#000",
+                            border: "1px solid #333",
+                            borderRadius: "20px",
+                            padding: "10px 20px"
+                        }}>
+                            Admin Login
+                        </button>
+                    </Link>
+                )}
             </nav>
 
             {/* Hero Section */}
@@ -76,44 +91,81 @@ export default function LandingPage() {
                     padding: "30px",
                     boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
                 }}>
-                    <h2 style={{ fontSize: "1.5rem", marginBottom: "20px" }}>Get Started</h2>
+                    <h2 style={{ fontSize: "1.5rem", marginBottom: "20px" }}>
+                        {user ? `Welcome back, ${user.name || "Voter"}` : "Get Started"}
+                    </h2>
 
-                    <div style={{ marginBottom: "20px" }}>
-                        <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "8px" }}>New User?</label>
-                        <Link to="/verify">
-                            <button style={{
-                                width: "100%",
-                                background: "rgba(255,255,255,0.1)",
-                                border: "1px solid rgba(255,255,255,0.1)",
-                                padding: "15px",
-                                borderRadius: "12px",
-                                textAlign: "left",
-                                color: "white",
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center"
-                            }}>
-                                <span>Register / Verify ID</span>
-                                <span>→</span>
+                    {user ? (
+                        <div style={{ marginBottom: "20px" }}>
+                            <Link to={user.role === 'admin' ? "/admin" : "/vote"}>
+                                <button style={{
+                                    width: "100%",
+                                    background: "#1d9bf0",
+                                    color: "white",
+                                    padding: "15px",
+                                    borderRadius: "12px",
+                                    fontWeight: "bold",
+                                    fontSize: "1.1rem"
+                                }}>
+                                    Go to Dashboard →
+                                </button>
+                            </Link>
+                            <button
+                                onClick={() => { localStorage.removeItem("user"); setUser(null); }}
+                                style={{
+                                    width: "100%",
+                                    background: "transparent",
+                                    border: "1px solid #333",
+                                    color: "#ff4444",
+                                    padding: "15px",
+                                    borderRadius: "12px",
+                                    fontWeight: "bold",
+                                    marginTop: "10px",
+                                    cursor: "pointer"
+                                }}>
+                                Logout
                             </button>
-                        </Link>
-                    </div>
+                        </div>
+                    ) : (
+                        <>
+                            <div style={{ marginBottom: "20px" }}>
+                                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "8px" }}>New User?</label>
+                                <Link to="/verify">
+                                    <button style={{
+                                        width: "100%",
+                                        background: "rgba(255,255,255,0.1)",
+                                        border: "1px solid rgba(255,255,255,0.1)",
+                                        padding: "15px",
+                                        borderRadius: "12px",
+                                        textAlign: "left",
+                                        color: "white",
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center"
+                                    }}>
+                                        <span>Register / Verify ID</span>
+                                        <span>→</span>
+                                    </button>
+                                </Link>
+                            </div>
 
-                    <div style={{ marginBottom: "30px" }}>
-                        <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "8px" }}>Already Registered?</label>
-                        <Link to="/login">
-                            <button style={{
-                                width: "100%",
-                                background: "white",
-                                color: "black",
-                                padding: "15px",
-                                borderRadius: "12px",
-                                fontWeight: "bold"
-                            }}>
-                                Login to Vote
-                            </button>
-                        </Link>
-                    </div>
+                            <div style={{ marginBottom: "30px" }}>
+                                <label style={{ display: "block", fontSize: "0.85rem", color: "#aaa", marginBottom: "8px" }}>Already Registered?</label>
+                                <Link to="/login">
+                                    <button style={{
+                                        width: "100%",
+                                        background: "white",
+                                        color: "black",
+                                        padding: "15px",
+                                        borderRadius: "12px",
+                                        fontWeight: "bold"
+                                    }}>
+                                        Login to Vote
+                                    </button>
+                                </Link>
+                            </div>
+                        </>
+                    )}
 
                     <p style={{ fontSize: "0.8rem", color: "#666", textAlign: "center" }}>
                         Secured by Blockchain Technology
