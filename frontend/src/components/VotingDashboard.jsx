@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { getPolls } from "../services/api";
+import { getPolls, castVote } from "../services/api";
 import { FaRegComment, FaRetweet, FaRegHeart, FaShare, FaSearch, FaEllipsisH } from "react-icons/fa";
 
 export default function VotingDashboard() {
@@ -25,6 +25,37 @@ export default function VotingDashboard() {
         }
         fetchPolls();
     }, []);
+
+    const handleVote = async (pollId, candidateId, candidateName) => {
+        const storedUser = localStorage.getItem("user");
+        if (!storedUser) {
+            alert("Please Login to Vote!");
+            return;
+        }
+
+        const user = JSON.parse(storedUser);
+        const voterId = user.id_number || user.id; // handle different user object structures
+
+        if (!voterId) {
+            alert("Invalid User Session. Please Login Again.");
+            return;
+        }
+
+        if (window.confirm(`Are you sure you want to vote for ${candidateName}?`)) {
+            try {
+                const res = await castVote({ pollId, candidateId, voterId });
+                if (res.success) {
+                    alert("Vote Cast Successfully! Thank you for voting.");
+                    // Optionally refresh polls or update UI locally
+                } else {
+                    alert(res.error || "Failed to cast vote.");
+                }
+            } catch (error) {
+                console.error("Voting Error", error);
+                alert("An error occurred while voting.");
+            }
+        }
+    };
 
     // Mock Feed Data
     const feedPosts = [
@@ -182,7 +213,6 @@ export default function VotingDashboard() {
                                         borderBottom: "1px solid #2f3336",
                                         display: "flex",
                                         gap: "12px",
-                                        cursor: "pointer"
                                     }}>
                                         <div style={{
                                             width: "48px",
@@ -225,7 +255,7 @@ export default function VotingDashboard() {
                                                         cursor: "pointer",
                                                         transition: "background 0.2s"
                                                     }}
-                                                        onClick={() => alert(`Voting for ${candidate.name} functionality coming soon!`)}
+                                                        onClick={() => handleVote(poll.id || poll._id, candidate.id || candidate._id, candidate.name)}
                                                         onMouseOver={(e) => e.currentTarget.style.background = "rgba(29, 155, 240, 0.1)"}
                                                         onMouseOut={(e) => e.currentTarget.style.background = "transparent"}
                                                     >

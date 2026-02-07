@@ -63,3 +63,12 @@ export async function addCandidateToPoll(data) {
     });
     return res.json();
 }
+
+export async function castVote(data) {
+    const res = await fetch(`${API_URL.replace("/voter", "/polls")}/vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    return res.json();
+}

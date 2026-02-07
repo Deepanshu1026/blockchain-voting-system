@@ -72,3 +72,58 @@ export async function addCandidateToPoll(req, res) {
 
     res.json({ success: true, candidate: data });
 }
+
+// Vote for Candidate
+export async function voteForCandidate(req, res) {
+    const { pollId, candidateId, voterId } = req.body;
+
+    // 1. Check if user already voted
+    const { data: existingVote, error: voteCheckError } = await supabase
+        .from("votes")
+        .select("*")
+        .eq("poll_id", pollId)
+        .eq("voter_id", voterId)
+        .single();
+
+    // If we find a vote, prevent voting again
+    if (existingVote) {
+        return res.status(400).json({ error: "You have already voted in this poll." });
+    }
+
+    // 2. Record Vote in 'votes' table
+    const { error: recordVoteError } = await supabase
+        .from("votes")
+        .insert([{ poll_id: pollId, candidate_id: candidateId, voter_id: voterId }]);
+
+    if (recordVoteError) {
+        // If table doesn't exist, we might want to fail gracefully or just log it
+        // For now, assume table exists. If not, this safeguards against double voting if it did.
+        // We will proceed to increment count even if tracking fails (for demo purposes)
+        // OR we return error to prompt user to create table.
+        // Let's return error to be safe.
+        return res.status(500).json({ error: "Failed to record vote. Backend likely missing 'votes' table." });
+    }
+
+    // 3. Increment Candidate Vote Count
+    // We use a stored procedure or just manual fetch-update for simplicity in demo
+    // RPC 'increment_vote' is better, but let's try manual read-update for now to avoid needing SQL setup for RPC
+
+    const { data: candidate, error: fetchError } = await supabase
+        .from("candidates")
+        .select("vote_count")
+        .eq("id", candidateId)
+        .single();
+
+    if (fetchError) return res.status(500).json({ error: "Candidate not found" });
+
+    const newCount = (candidate.vote_count || 0) + 1;
+
+    const { error: updateError } = await supabase
+        .from("candidates")
+        .update({ vote_count: newCount })
+        .eq("id", candidateId);
+
+    if (updateError) return res.status(500).json({ error: updateError.message });
+
+    res.json({ success: true, message: "Vote cast successfully!" });
+}
