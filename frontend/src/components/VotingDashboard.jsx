@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import { getPolls, castVote } from "../services/api";
-import { FaRegComment, FaRetweet, FaRegHeart, FaShare, FaSearch, FaEllipsisH } from "react-icons/fa";
+import { FaRegComment, FaRetweet, FaRegHeart, FaShare, FaSearch, FaEllipsisH, FaWallet } from "react-icons/fa";
+import { ethers } from "ethers";
 
 export default function VotingDashboard() {
     const [polls, setPolls] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("feed"); // 'feed' or 'elections'
+    const [walletAddress, setWalletAddress] = useState("");
 
     useEffect(() => {
         async function fetchPolls() {
@@ -24,7 +26,35 @@ export default function VotingDashboard() {
             }
         }
         fetchPolls();
+        checkWalletConnection();
     }, []);
+
+    const checkWalletConnection = async () => {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({ method: "eth_accounts" });
+                if (accounts.length > 0) {
+                    setWalletAddress(accounts[0]);
+                }
+            } catch (error) {
+                console.error("Error checking wallet connection", error);
+            }
+        }
+    };
+
+    const connectWallet = async () => {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+                setWalletAddress(accounts[0]);
+            } catch (error) {
+                console.error("Error connecting wallet", error);
+                alert("Failed to connect wallet.");
+            }
+        } else {
+            alert("Please install MetaMask to use this feature!");
+        }
+    };
 
     const handleVote = async (pollId, candidateId, candidateName) => {
         const storedUser = localStorage.getItem("user");
@@ -111,7 +141,46 @@ export default function VotingDashboard() {
                     borderBottom: "1px solid #2f3336",
                     zIndex: 10
                 }}>
-                    <h2 style={{ padding: "16px", margin: 0, fontSize: "1.2rem", fontWeight: "bold" }}>Home</h2>
+                    <div style={{ padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <h2 style={{ margin: 0, fontSize: "1.2rem", fontWeight: "bold" }}>Home</h2>
+
+                        {walletAddress ? (
+                            <div style={{
+                                padding: "8px 16px",
+                                background: "rgba(29, 155, 240, 0.1)",
+                                border: "1px solid #1d9bf0",
+                                borderRadius: "20px",
+                                color: "#1d9bf0",
+                                fontSize: "0.9rem",
+                                fontWeight: "bold",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "8px"
+                            }}>
+                                <FaWallet />
+                                {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={connectWallet}
+                                style={{
+                                    padding: "8px 16px",
+                                    background: "#fff",
+                                    border: "none",
+                                    borderRadius: "20px",
+                                    color: "#000",
+                                    fontSize: "0.9rem",
+                                    fontWeight: "bold",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px"
+                                }}>
+                                <FaWallet /> Connect Wallet
+                            </button>
+                        )}
+                    </div>
+
                     <div style={{ display: "flex", width: "100%" }}>
                         <div
                             onClick={() => setActiveTab("feed")}
