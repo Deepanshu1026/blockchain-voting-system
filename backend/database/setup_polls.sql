@@ -17,4 +17,5 @@ values
 -- 3. Enable Public Read Access
 alter table public.candidates enable row level security;
 create policy "Enable read access for all users" on public.candidates for select using (true);
-create policy "Enable insert for all users" on public.candidates for insert with check (true);
+create policy "Enable update for all users" on public.candidates for update using (true);
+create policy "Enable delete for all users" on public.candidates for delete using (true);

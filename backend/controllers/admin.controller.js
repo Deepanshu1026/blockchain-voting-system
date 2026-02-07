@@ -31,3 +31,19 @@ export async function addCandidate(req, res) {
     }
     res.json({ success: true, candidate: data[0] });
 }
+
+// DELETE /api/admin/candidates/:id
+export async function deleteCandidate(req, res) {
+    const { id } = req.params;
+
+    const { error } = await supabase
+        .from("candidates")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    res.json({ success: true, message: "Candidate deleted successfully" });
+}

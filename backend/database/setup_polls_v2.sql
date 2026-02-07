@@ -22,4 +22,5 @@ update public.candidates set poll_id = 1 where poll_id is null;
 -- 5. Enable RLS
 alter table public.polls enable row level security;
 create policy "Enable read access for all users" on public.polls for select using (true);
-create policy "Enable insert for all users" on public.polls for insert with check (true);
+create policy "Enable update for all users" on public.polls for update using (true);
+create policy "Enable delete for all users" on public.polls for delete using (true);

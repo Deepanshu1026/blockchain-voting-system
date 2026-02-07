@@ -40,6 +40,13 @@ export async function addCandidate(data) {
     });
     return res.json();
 }
+
+export async function deleteCandidate(id) {
+    const res = await fetch(`${API_URL.replace("/voter", "/admin")}/candidates/${id}`, {
+        method: "DELETE",
+    });
+    return res.json();
+}
 // Polls API
 export async function getPolls() {
     const res = await fetch(`${API_URL.replace("/voter", "/polls")}/polls`);

@@ -1,17 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function LandingPage() {
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
             try {
-                setUser(JSON.parse(storedUser));
+                const userData = JSON.parse(storedUser);
+                setUser(userData);
+
+                // Auto-redirect based on role
+                if (userData.role === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/vote');
+                }
             } catch (e) { console.error(e); }
         }
-    }, []);
+    }, [navigate]);
 
     return (
         <div style={{
